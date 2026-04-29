@@ -19,7 +19,7 @@ const createUser = async (req, res) => {
             })
         }
 
-        const emailExists = await userSchema.findOne({ email})
+        const emailExists = await userSchema.findOne({email})
         if (emailExists) {
             return res.status(400).json({
                 message: "Already exists."
@@ -35,12 +35,12 @@ const createUser = async (req, res) => {
             user
         })
 
-
-
     } catch (error) {
         console.log("error in creating users.=====>", error);
     }
 
 }
+
+
 
 export { createUser }
