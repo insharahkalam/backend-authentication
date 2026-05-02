@@ -1,4 +1,5 @@
 import userSchema from "../models/auth.model.js";
+import jwt from "jsonwebtoken";
 
 const createUser = async (req, res) => {
     try {
@@ -49,4 +50,77 @@ const getUser = async (req, res) => {
     })
 }
 
-export { createUser ,getUser}
+const getOneUser = async (req, res) => {
+    const { id } = req.params
+    console.log(id);
+
+    const specific = await userSchema.findById({ _id: id })
+    if (specific == null) {
+        return res.json({
+            message: "user not found!",
+        })
+    }
+    res.json({
+        message: "user fetched!",
+        specific
+    })
+}
+
+// const loginUser = async (req, res) => {
+//     const { email, password } = req.body
+//     if (!email || !password) {
+//         return res.json({
+//             message: "All feild requird!"
+//         })
+//     }
+
+//     const logUser = await userSchema.findOne({ email })
+//     console.log(logUser);
+
+//     if (logUser == null) {
+//         return res.json({
+//             message: "user not found!"
+//         })
+//     }
+//     if (logUser.password != password) {
+//         console.log(logUser.password);
+//         console.log(password);
+
+//         return res.json({
+//             message: "Invalid credentials!"
+//         })
+//     }
+
+//     const token = jwt.sign({ id: logUser.id }, process.env.JWT_SECRETS)
+// }
+
+// if (!token) {
+//     return res.json({
+//         message: "Unautherized!"
+//     })
+// }
+
+// if (token) {
+//     const decoded = jwt.verify(token, process.env.JWT_SECRETS)
+//     if (decoded.id !== logUser.id) {
+//         return res.json({
+//             message: "Invalid token!"
+//         })
+//     }
+// }
+
+// const cookies = (req, res) => {
+//     req.cookies('token', token)
+// }
+
+// res.json({
+//     message: "login success",
+//     token,
+//     cookies
+
+// })
+
+
+
+
+export { createUser, getUser, getOneUser }

@@ -2,6 +2,7 @@ import dns from 'dns'
 dns.setServers(['8.8.8.8', '1.1.1.1'])
 
 import express from 'express'
+import cookieParser from 'cookie-parser'
 import dotenv from 'dotenv'
 import ConnectDB from './db/db.js'
 import router from './routes/auth.routes.js'
@@ -12,12 +13,13 @@ dotenv.config()
 const app = express()
 
 app.use(express.json())
+app.use(cookieParser())
 ConnectDB()
 
-app.get('/',(req,res)=>{
-res.json({
-    message:"server in running.."
-})
+app.get('/', (req, res) => {
+    res.json({
+        message: "server in running.."
+    })
 })
 
 app.use('/api/auth', router)
