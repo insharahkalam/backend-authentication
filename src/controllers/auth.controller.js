@@ -19,7 +19,7 @@ const createUser = async (req, res) => {
             })
         }
 
-        const emailExists = await userSchema.findOne({email})
+        const emailExists = await userSchema.findOne({ email })
         if (emailExists) {
             return res.status(400).json({
                 message: "Already exists."
@@ -41,6 +41,12 @@ const createUser = async (req, res) => {
 
 }
 
+const getUser = async (req, res) => {
+    const allUser = await userSchema.find()
+    res.json({
+        message: "user fetched success!",
+        allUser
+    })
+}
 
-
-export { createUser }
+export { createUser ,getUser}

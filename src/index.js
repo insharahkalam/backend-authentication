@@ -15,7 +15,7 @@ app.use(express.json())
 ConnectDB()
 
 
-app.use('/api/auth/register', router)
+app.use('/api/auth', router)
 
 
 app.listen(process.env.PORT, () => {
