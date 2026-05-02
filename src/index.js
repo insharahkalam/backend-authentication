@@ -14,6 +14,11 @@ const app = express()
 app.use(express.json())
 ConnectDB()
 
+app.get('/',(req,res)=>{
+res.json({
+    message:"server in running.."
+})
+})
 
 app.use('/api/auth', router)
 
