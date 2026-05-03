@@ -1,5 +1,6 @@
 import userSchema from "../models/auth.model.js";
 import jwt from "jsonwebtoken";
+import bcrypt from 'bcrypt'
 
 const createUser = async (req, res) => {
     try {
@@ -20,6 +21,10 @@ const createUser = async (req, res) => {
             })
         }
 
+        const hashPass = await bcrypt.hash(req.body.password, 10)
+        console.log('password hashing====>', hashPass);
+
+
         const emailExists = await userSchema.findOne({ email })
         if (emailExists) {
             return res.status(400).json({
@@ -29,7 +34,7 @@ const createUser = async (req, res) => {
         const user = await userSchema.create({
             username,
             email,
-            password
+            password: hashPass
         })
         res.status(200).json({
             message: "user created sucessfully!",
@@ -66,61 +71,54 @@ const getOneUser = async (req, res) => {
     })
 }
 
-// const loginUser = async (req, res) => {
-//     const { email, password } = req.body
-//     if (!email || !password) {
-//         return res.json({
-//             message: "All feild requird!"
-//         })
-//     }
+const loginUser = async (req, res) => {
+    const { email, password } = req.body
+    if (!email || !password) {
+        return res.json({
+            message: "All feild requird!"
+        })
+    }
+    const logUser = await userSchema.findOne({ email })
+    console.log(logUser);
 
-//     const logUser = await userSchema.findOne({ email })
-//     console.log(logUser);
+    if (logUser == null) {
+        return res.json({
+            message: "user not found!"
+        })
+    }
 
-//     if (logUser == null) {
-//         return res.json({
-//             message: "user not found!"
-//         })
-//     }
-//     if (logUser.password != password) {
-//         console.log(logUser.password);
-//         console.log(password);
+    const decode = await bcrypt.compare(password, logUser.password)
+    console.log("logiin check=====>", decode);
 
-//         return res.json({
-//             message: "Invalid credentials!"
-//         })
-//     }
 
-//     const token = jwt.sign({ id: logUser.id }, process.env.JWT_SECRETS)
-// }
+    if (!decode) {
+        return res.json({
+            message: "Invalid credentials!"
+        })
+    }
 
-// if (!token) {
-//     return res.json({
-//         message: "Unautherized!"
-//     })
-// }
+    const token = jwt.sign({ id: logUser.id }, process.env.JWT_SECRETS)
 
-// if (token) {
-//     const decoded = jwt.verify(token, process.env.JWT_SECRETS)
-//     if (decoded.id !== logUser.id) {
-//         return res.json({
-//             message: "Invalid token!"
-//         })
-//     }
-// }
+    if (!token) {
+        return res.json({
+            message: "Unautherized!"
+        })
+    }
 
-// const cookies = (req, res) => {
-//     req.cookies('token', token)
-// }
+    const decoded = jwt.verify(token, process.env.JWT_SECRETS)
 
-// res.json({
-//     message: "login success",
-//     token,
-//     cookies
+    res.cookie('token', token)
 
-// })
+    res.json({
+        message: "user login success",
+        cookie: token,
+
+    })
+}
 
 
 
 
-export { createUser, getUser, getOneUser }
+
+
+export { createUser, getUser, getOneUser, loginUser }
