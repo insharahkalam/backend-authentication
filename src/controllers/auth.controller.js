@@ -4,8 +4,8 @@ import bcrypt from 'bcrypt'
 
 const createUser = async (req, res) => {
     try {
-        const { username, email, password } = req.body;
-        if (!username || !email || !password) {
+        const { username, email, password, role } = req.body;
+        if (!username || !email || !password || !role) {
             return res.status(400).json({
                 message: "All fields required."
             })
@@ -34,7 +34,8 @@ const createUser = async (req, res) => {
         const user = await userSchema.create({
             username,
             email,
-            password: hashPass
+            password: hashPass,
+            role
         })
         res.status(200).json({
             message: "user created sucessfully!",
@@ -79,7 +80,7 @@ const loginUser = async (req, res) => {
         })
     }
     const logUser = await userSchema.findOne({ email })
-    console.log(logUser);
+    console.log(logUser, "user mil rha hai.");
 
     if (logUser == null) {
         return res.json({
@@ -97,22 +98,27 @@ const loginUser = async (req, res) => {
         })
     }
 
+
     const token = jwt.sign({ id: logUser.id, role: logUser.role }, process.env.JWT_SECRETS)
+    console.log("token mil rha hai check ====>", token);
 
-    if (!token) {
-        return res.json({
-            message: "Unautherized!"
-        })
-    }
-
-    const decoded = jwt.verify(token, process.env.JWT_SECRETS)
+    console.log("SECRET====>", process.env.JWT_SECRETS);
 
     res.cookie('token', token)
 
     res.json({
-        message: "user login success",
-        cookie: token,
+        message: "User login successful",
+        token
+    })
 
+
+}
+
+const admin = async (req, res) => {
+    const allUser = await userSchema.find()
+    res.json({
+        message: "admin login success..",
+        allUser
     })
 }
 
@@ -121,4 +127,4 @@ const loginUser = async (req, res) => {
 
 
 
-export { createUser, getUser, getOneUser, loginUser }
+export { createUser, getUser, getOneUser, loginUser, admin }
