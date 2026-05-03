@@ -72,6 +72,24 @@ const getOneUser = async (req, res) => {
     })
 }
 
+const updateUser = async (req, res) => {
+
+    const { id } = req.params
+    const { password } = req.body
+    console.log(password, "pass check");
+    const updatePassHash = await bcrypt.hash(password, 10)
+    console.log(updatePassHash, "with hashing");
+
+    const updated = await userSchema.findByIdAndUpdate(id, { username: req.body.username, email: req.body.email, role: req.body.role, password: updatePassHash })
+
+    console.log(updated);
+    res.json({
+        message: "user updated Success!",
+        updated
+    })
+
+}
+
 const loginUser = async (req, res) => {
     const { email, password } = req.body
     if (!email || !password) {
@@ -122,9 +140,24 @@ const admin = async (req, res) => {
     })
 }
 
+const logOut = (req, res) => {
+    try {
+        res.clearCookie("token")
+        res.status(200).json({
+            status: true,
+            message: "logout Success!"
+        })
+    } catch (error) {
+        console.log(error, "logout Error");
+        res.json({
+            message: "error in logging out",
+            status: false
+        })
+    }
+}
 
 
 
 
 
-export { createUser, getUser, getOneUser, loginUser, admin }
+export { createUser, getUser, getOneUser, updateUser, loginUser, admin, logOut }

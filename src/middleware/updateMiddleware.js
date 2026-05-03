@@ -1,10 +1,11 @@
 import jwt from "jsonwebtoken";
 import userSchema from "../models/auth.model.js";
 
-const adminCheck = async (req, res, next) => {
+const updateCheck = async (req, res, next) => {
     try {
+
         const token = req.cookies.token
-        console.log(token, "token mil rha hai.");
+        console.log(token, "token hai.");
 
         if (!token) {
             return res.json({
@@ -12,14 +13,17 @@ const adminCheck = async (req, res, next) => {
             })
         }
         const decoded = jwt.verify(token, process.env.JWT_SECRETS)
-        console.log(decoded.id, "id check ");
-        console.log(decoded.role, "role check ");
+        console.log(decoded, "for check ");
 
-        if (decoded.role != "admin") {
+        const checkUser = await userSchema.findById(decoded.id)
+
+        if (!checkUser) {
             return res.json({
-                message: "Access denind , only admin can access this..!"
-            })
+                message: "User not found!"
+            });
         }
+
+        req.checkUser = checkUser
 
         next()
 
@@ -30,7 +34,6 @@ const adminCheck = async (req, res, next) => {
             message: "Invalid Token"
         })
     }
-
 }
 
-export { adminCheck }
+export { updateCheck }
