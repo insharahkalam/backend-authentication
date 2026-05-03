@@ -97,7 +97,7 @@ const loginUser = async (req, res) => {
         })
     }
 
-    const token = jwt.sign({ id: logUser.id }, process.env.JWT_SECRETS)
+    const token = jwt.sign({ id: logUser.id, role: logUser.role }, process.env.JWT_SECRETS)
 
     if (!token) {
         return res.json({
