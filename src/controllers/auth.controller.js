@@ -90,6 +90,19 @@ const updateUser = async (req, res) => {
 
 }
 
+const deleteUser = async (req, res) => {
+    const { id } = req.params
+    console.log(id, "id check");
+
+    const dU = await userSchema.findByIdAndDelete(id)
+    console.log(dU, "delete check");
+
+    res.status(200).json({
+        message: "user deleted success!",
+        dU
+    })
+}
+
 const loginUser = async (req, res) => {
     const { email, password } = req.body
     if (!email || !password) {
@@ -160,4 +173,4 @@ const logOut = (req, res) => {
 
 
 
-export { createUser, getUser, getOneUser, updateUser, loginUser, admin, logOut }
+export { createUser, getUser, getOneUser, updateUser, loginUser, admin, logOut, deleteUser }

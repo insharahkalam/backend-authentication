@@ -8,8 +8,6 @@ import ConnectDB from './db/db.js'
 import router from './routes/auth.routes.js'
 dotenv.config()
 
-
-
 const app = express()
 
 app.use(express.json())
