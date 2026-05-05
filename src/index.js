@@ -6,11 +6,13 @@ import cookieParser from 'cookie-parser'
 import dotenv from 'dotenv'
 import ConnectDB from './db/db.js'
 import router from './routes/auth.routes.js'
+import cors from 'cors'
 dotenv.config()
 
 const app = express()
 
 app.use(express.json())
+app.use(cors())
 app.use(cookieParser())
 ConnectDB()
 
