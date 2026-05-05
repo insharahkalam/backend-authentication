@@ -7,7 +7,7 @@ const createUser = async (req, res) => {
         const { username, email, password, role } = req.body;
         if (!username || !email || !password || !role) {
             return res.status(400).json({
-                message: "All fields required."
+                message: "All fields required. username, email, password, role",
             })
         }
         if (username.length < 4) {
@@ -106,7 +106,7 @@ const deleteUser = async (req, res) => {
 const loginUser = async (req, res) => {
     const { email, password } = req.body
     if (!email || !password) {
-        return res.json({
+        return res.status(400).json({
             message: "All feild requird!"
         })
     }
@@ -114,7 +114,7 @@ const loginUser = async (req, res) => {
     console.log(logUser, "user mil rha hai.");
 
     if (logUser == null) {
-        return res.json({
+        return res.status(404).json({
             message: "user not found!"
         })
     }
@@ -124,7 +124,7 @@ const loginUser = async (req, res) => {
 
 
     if (!decode) {
-        return res.json({
+        return res.status(400).json({
             message: "Invalid credentials!"
         })
     }
@@ -139,7 +139,8 @@ const loginUser = async (req, res) => {
 
     res.json({
         message: "User login successful",
-        token
+        token,
+        logUser
     })
 
 
@@ -162,7 +163,7 @@ const logOut = (req, res) => {
         })
     } catch (error) {
         console.log(error, "logout Error");
-        res.json({
+        res.status(400).json({
             message: "error in logging out",
             status: false
         })
