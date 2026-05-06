@@ -13,7 +13,8 @@ const app = express()
 
 app.use(express.json())
 app.use(cors({
-    origin: ['http://localhost:5173/', 'https://fronten-auth.vercel.app/']
+    origin: '*',
+    credentials: true
 }))
 app.use(cookieParser())
 ConnectDB()
