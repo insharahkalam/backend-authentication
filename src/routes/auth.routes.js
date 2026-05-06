@@ -6,7 +6,7 @@ import { updateCheck } from "../middleware/updateMiddleware.js";
 const router = express.Router()
 
 router.post('/users', createUser);
-router.post('/login', loginUser);
+router.post('/loginUser', loginUser);
 router.get('/allUsers', getUser)
 router.get('/getOne/:id', getOneUser)
 router.get('/admin', adminCheck, admin)
