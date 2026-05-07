@@ -145,8 +145,8 @@ const loginUser = async (req, res) => {
 
     res.cookie('token', token, {
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+        secure: true,
+        sameSite: "none",
         path: "/"
     })
 
@@ -155,9 +155,6 @@ const loginUser = async (req, res) => {
         token,
         logUser
     })
-
-    console.log(document.cookie, "cookie check")
-
 }
 
 const admin = async (req, res) => {
@@ -172,8 +169,8 @@ const logOut = (req, res) => {
     try {
         res.clearCookie("token", {
             httpOnly: true,
-            secure: process.env.NODE_ENV === "production",
-            sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+            secure: true,
+            sameSite: "none",
             path: "/"
         })
         res.status(200).json({
