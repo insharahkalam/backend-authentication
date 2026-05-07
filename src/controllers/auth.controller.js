@@ -90,7 +90,7 @@ const updateUser = async (req, res) => {
         { new: true }
     )
 
-    console.log(updated,"updated data aarha hai");
+    console.log(updated, "updated data aarha hai");
     res.json({
         message: "user updated Success!",
         updated
@@ -170,7 +170,12 @@ const admin = async (req, res) => {
 
 const logOut = (req, res) => {
     try {
-        res.clearCookie("token")
+        res.clearCookie("token", {
+            httpOnly: true,
+            secure: true,
+            sameSite: "none",
+            path: "/"
+        })
         res.status(200).json({
             status: true,
             message: "logout Success!"
