@@ -80,9 +80,17 @@ const updateUser = async (req, res) => {
     const updatePassHash = await bcrypt.hash(password, 10)
     console.log(updatePassHash, "with hashing");
 
-    const updated = await userSchema.findByIdAndUpdate(id, { username: req.body.username, email: req.body.email, role: req.body.role, password: updatePassHash })
+    const updated = await userSchema.findByIdAndUpdate(id,
+        {
+            username: req.body.username,
+            email: req.body.email,
+            role: req.body.role,
+            password: updatePassHash
+        },
+        { new: true }
+    )
 
-    console.log(updated);
+    console.log(updated,"updated data aarha hai");
     res.json({
         message: "user updated Success!",
         updated
@@ -148,7 +156,7 @@ const loginUser = async (req, res) => {
         logUser
     })
 
-    console.log(document.cookie)
+    console.log(document.cookie, "cookie check")
 
 }
 
