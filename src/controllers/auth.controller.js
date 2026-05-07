@@ -130,13 +130,11 @@ const loginUser = async (req, res) => {
     const decode = await bcrypt.compare(password, logUser.password)
     console.log("logiin check=====>", decode);
 
-
     if (!decode) {
         return res.status(400).json({
             message: "Invalid credentials!"
         })
     }
-
 
     const token = jwt.sign({ id: logUser.id, role: logUser.role }, process.env.JWT_SECRETS)
     console.log("token mil rha hai check ====>", token);
@@ -145,8 +143,8 @@ const loginUser = async (req, res) => {
 
     res.cookie("token", token, {
         httpOnly: true,
-        secure: true,
-        sameSite: "none",
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax",
         path: "/"
     });
 
@@ -169,8 +167,8 @@ const logOut = (req, res) => {
     try {
         res.clearCookie("token", {
             httpOnly: true,
-            secure: true,
-            sameSite: "none",
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "lax",
             path: "/"
         });
         res.status(200).json({
