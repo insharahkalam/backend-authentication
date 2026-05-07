@@ -14,14 +14,9 @@ const app = express()
 app.use(express.json())
 
 app.use(cors({
-    origin: '*',
+    origin: ['http://localhost:5173', "https://fronten-auth.vercel.app/"],
     credentials: true
 }))
-
-// app.use(cors({
-//     origin: ['http://localhost:5173', "https://fronten-auth.vercel.app/"],
-//     credentials: true
-// }))
 
 
 // app.use(cors({
