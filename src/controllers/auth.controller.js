@@ -143,12 +143,7 @@ const loginUser = async (req, res) => {
 
     const isProduction = process.env.NODE_ENV === "production";
 
-    res.cookie("token", token, {
-        httpOnly: true,
-        secure: isProduction,
-        sameSite: isProduction ? "none" : "lax",
-        path: "/"
-    });
+    res.cookie("token", token);
 
     res.json({
         message: "User login successful",
@@ -169,12 +164,7 @@ const logOut = (req, res) => {
     try {
         const isProduction = process.env.NODE_ENV === "production";
 
-        res.clearCookie("token", {
-            httpOnly: true,
-            secure: isProduction,
-            sameSite: isProduction ? "none" : "lax",
-            path: "/"
-        });
+        res.clearCookie("token");
 
         res.status(200).json({
             status: true,
