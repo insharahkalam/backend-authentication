@@ -131,19 +131,25 @@ const loginUser = async (req, res) => {
     console.log("logiin check=====>", decode);
 
     if (!decode) {
+        console.log(decode, "deceode check");
+
         return res.status(400).json({
             message: "Invalid credentials!"
         })
     }
 
-    const token = jwt.sign({ id: logUser.id, role: logUser.role }, process.env.JWT_SECRETS)
-    console.log("token mil rha hai check ====>", token);
+    const decoded = jwt.sign({ id: logUser.id, role: logUser.role }, process.env.JWT_SECRETS, (err, token) => {
+        res.cookie("token", token, {
+            httpOnly: true,
+            secure: true,
+            path: '/'
+        });
 
-    console.log("SECRET====>", process.env.JWT_SECRETS);
+        console.log(err, "jwt function err");
+        console.log(token, "jwt function token");
 
-    // const isProduction = process.env.NODE_ENV === "production";
-
-    res.cookie("token", token);
+    })
+    console.log("jwt ka dedcoded mil rha hai check ====>", decoded);
 
     res.json({
         message: "User login successful",
@@ -162,9 +168,11 @@ const admin = async (req, res) => {
 
 const logOut = (req, res) => {
     try {
-        // const isProduction = process.env.NODE_ENV === "production";
-
-        res.clearCookie("token");
+        res.clearCookie("token", {
+            httpOnly: true,
+            secure: true,
+            path: '/'
+        })
 
         res.status(200).json({
             status: true,
@@ -178,9 +186,6 @@ const logOut = (req, res) => {
         })
     }
 }
-
-
-
 
 
 export { createUser, getUser, getOneUser, updateUser, loginUser, admin, logOut, deleteUser }
