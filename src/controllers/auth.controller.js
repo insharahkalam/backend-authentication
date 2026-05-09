@@ -141,9 +141,12 @@ const loginUser = async (req, res) => {
 
     console.log("SECRET====>", process.env.JWT_SECRETS);
 
-    const isProduction = process.env.NODE_ENV === "production";
-
-    res.cookie("token", token);
+    res.cookie("token", token, {
+        httpOnly: true,
+        secure: true,
+        sameSite: "none",
+        path: "/"
+    });
 
     res.json({
         message: "User login successful",
@@ -162,9 +165,13 @@ const admin = async (req, res) => {
 
 const logOut = (req, res) => {
     try {
-        const isProduction = process.env.NODE_ENV === "production";
-
-        res.clearCookie("token");
+        
+        res.clearCookie("token", {
+            httpOnly: true,
+            secure: true,
+            sameSite: "none",
+            path: "/"
+        });
 
         res.status(200).json({
             status: true,
