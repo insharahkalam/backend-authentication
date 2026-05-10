@@ -35,7 +35,14 @@ app.get('/', (req, res) => {
 
 app.use('/api/auth', router)
 
-
+if(process.env.deployment == 'false'){
 app.listen(process.env.PORT, () => {
     console.log(`server is running on ${process.env.PORT} port`);
 })
+
+}
+export default app
+
+
+
+
