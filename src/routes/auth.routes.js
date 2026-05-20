@@ -1,7 +1,6 @@
 import express from "express";
 import { createUser, getUser, getOneUser, loginUser, admin, logOut, updateUser, deleteUser } from "../controllers/auth.controller.js";
 import { adminCheck } from "../middleware/authMiddleware.js";
-import { updateCheck } from "../middleware/updateMiddleware.js";
 
 const router = express.Router()
 

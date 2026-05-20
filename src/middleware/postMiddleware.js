@@ -1,34 +1,27 @@
 import jwt from "jsonwebtoken";
 import userSchema from "../models/auth.model.js";
 
-const adminCheck = async (req, res, next) => {
+const userCheck = async (req, res, next) => {
     try {
         const token = req.cookies.token
         console.log(token, "token mil rha hai.");
 
         if (!token) {
             return res.json({
-                message: "Unautherized! Token not found."
+                message: "Unautherized! please login first then create a post..!"
             })
         }
+
         const decoded = jwt.verify(token, process.env.JWT_SECRETS)
-        console.log(decoded.id, "id check ");
-        console.log(decoded.role, "role check ");
 
         console.log(decoded, "decoded check");
-
-        if (decoded.role != "admin") {
-            return res.json({
-                message: "Access denind , only admin can access this..!"
-            })
-        }
 
         req.user = decoded
 
         next()
 
     } catch (error) {
-        console.log(error, "error in auth middleware.");
+        console.log(error, "error in usercheck middleware.");
 
         res.json({
             message: "Invalid Token"
@@ -37,4 +30,4 @@ const adminCheck = async (req, res, next) => {
 
 }
 
-export { adminCheck }
+export { userCheck }

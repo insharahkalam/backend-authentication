@@ -7,6 +7,7 @@ import dotenv from 'dotenv'
 import ConnectDB from './db/db.js'
 import router from './routes/auth.routes.js'
 import cors from 'cors'
+import postRouter from './routes/post.router.js'
 dotenv.config()
 
 const app = express()
@@ -35,10 +36,12 @@ app.get('/', (req, res) => {
 
 app.use('/api/auth', router)
 
-if(process.env.deployment == 'false'){
-app.listen(process.env.PORT, () => {
-    console.log(`server is running on ${process.env.PORT} port`);
-})
+app.use('/api/posts', postRouter)
+
+if (process.env.deployment == 'false') {
+    app.listen(process.env.PORT, () => {
+        console.log(`server is running on ${process.env.PORT} port`);
+    })
 
 }
 export default app

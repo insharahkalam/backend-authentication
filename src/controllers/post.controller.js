@@ -1,0 +1,106 @@
+import userSchema from "../models/auth.model.js";
+import post from "../models/post.model.js";
+import { deleteImg, uploadImg } from "../services/storage.service.js";
+
+const createPost = async (req, res) => {
+
+    try {
+
+        const { title, content } = req.body;
+
+        // 1. Validate first
+        if (!title || !content || !req.file) {
+            return res.status(400).json({
+                message: "All fields are required!"
+            });
+        }
+
+        // 2. Upload image
+        const uplodCheck = await uploadImg(req.file);
+
+        if (!uplodCheck || !uplodCheck.secure_url) {
+            return res.status(500).json({
+                message: "Image upload failed!"
+            });
+        }
+
+        // 3. Create post
+        const posts = await post.create({
+            title,
+            content,
+            userId: req.user.id,
+            image: uplodCheck.secure_url,
+            public_id: uplodCheck.public_id
+        });
+
+        return res.status(201).json({
+            message: "Post created successfully!",
+            posts
+        });
+
+    } catch (error) {
+        console.log(error, "error in creating post");
+
+        return res.status(500).json({
+            message: "Server error"
+        });
+    }
+};
+
+
+const deletePost = async (req, res) => {
+    const { id } = req.params
+    try {
+        const find = await post.findById(id)
+        if (find == null) {
+            return res.status(404).json({ status: false, message: 'post not found' })
+        }
+        const dltpostImg = await deleteImg(find.public_id)
+        console.log('dlt--->', dltpostImg);
+        const delePost = await post.findByIdAndDelete(id)
+        console.log('result in deleting data-->', delePost);
+
+        if (delePost == null) {
+            return res.status(404).json({ status: false, message: 'post not found' })
+        }
+        return res.status(200).json({ status: false, message: 'SUCCESSFULLY DELETEED' })
+
+    } catch (error) {
+        return res.status(400).json({ status: false, message: error.message })
+    }
+}
+
+const getAllPost = async (req, res) => {
+    try {
+        const getPost = await post.find()
+        res.status(200).json({
+            message: "fetched success",
+            getPost
+
+        })
+    } catch (error) {
+        console.log(error, 'getting all post error');
+        return res.status(400).json({
+            message: "getting all post error"
+        })
+    }
+}
+
+const getPost = async (req, res) => {
+    // const { id } = req.params
+    // console.log(id, "get one post id");
+
+    const getOne = await post.find({ userId: req.user.id })
+    console.log(req.user.id, "checkingg======>>");
+    console.log(req.user, "check======>>");
+
+    console.log(getOne, "checking getone");
+
+    res.json({
+        message: "post Fetched successfully!",
+        getOne
+    })
+
+}
+
+export { createPost, deletePost, getAllPost, getPost };
