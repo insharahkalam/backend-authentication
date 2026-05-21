@@ -7,7 +7,7 @@ import dotenv from 'dotenv'
 import ConnectDB from './db/db.js'
 import router from './routes/auth.routes.js'
 import cors from 'cors'
-import postRouter from './routes/post.router.js'
+import postRouter from './routes/product.router.js'
 dotenv.config()
 
 const app = express()
@@ -18,12 +18,6 @@ app.use(cors({
     origin: ['http://localhost:5173', "https://fronten-auth.vercel.app"],
     credentials: true
 }))
-
-
-// app.use(cors({
-//    origin:'*',
-// credentials:true
-// }))
 
 app.use(cookieParser())
 ConnectDB()
@@ -36,7 +30,7 @@ app.get('/', (req, res) => {
 
 app.use('/api/auth', router)
 
-app.use('/api/posts', postRouter)
+app.use('/api/products', postRouter)
 
 if (process.env.deployment == 'false') {
     app.listen(process.env.PORT, () => {

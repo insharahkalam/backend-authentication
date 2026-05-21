@@ -8,7 +8,7 @@ const adminCheck = async (req, res, next) => {
 
         if (!token) {
             return res.json({
-                message: "Unautherized! Token not found."
+                message: "Unautherized! please login first."
             })
         }
         const decoded = jwt.verify(token, process.env.JWT_SECRETS)
@@ -22,19 +22,14 @@ const adminCheck = async (req, res, next) => {
                 message: "Access denind , only admin can access this..!"
             })
         }
-
-        req.user = decoded
-
         next()
 
     } catch (error) {
         console.log(error, "error in auth middleware.");
-
         res.json({
             message: "Invalid Token"
         })
     }
-
 }
 
 export { adminCheck }

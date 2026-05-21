@@ -8,21 +8,15 @@ const userCheck = async (req, res, next) => {
 
         if (!token) {
             return res.json({
-                message: "Unautherized! please login first then create a post..!"
+                message: "Unautherized! please login first..."
             })
         }
-
         const decoded = jwt.verify(token, process.env.JWT_SECRETS)
-
         console.log(decoded, "decoded check");
-
-        req.user = decoded
-
         next()
 
     } catch (error) {
         console.log(error, "error in usercheck middleware.");
-
         res.json({
             message: "Invalid Token"
         })
