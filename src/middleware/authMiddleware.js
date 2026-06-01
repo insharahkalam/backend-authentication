@@ -3,12 +3,15 @@ import userSchema from "../models/auth.model.js";
 
 const adminCheck = async (req, res, next) => {
     try {
+   
+        console.log(req.cookies.token , 'check token in middleware');
+
         const token = req.cookies.token
         console.log(token, "token mil rha hai.");
 
         if (!token) {
             return res.json({
-                message: "Unautherized! please login first."
+                message: "Unautherized! please login first admin."
             })
         }
         const decoded = jwt.verify(token, process.env.JWT_SECRETS)

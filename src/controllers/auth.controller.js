@@ -145,10 +145,11 @@ const loginUser = async (req, res) => {
     res.cookie("token", token, {
         httpOnly: true,
         secure: true,
+        sameSite: "none",
         path: '/'
     });
 
-    
+
     console.log(token, "jwt function token");
 
     res.json({
