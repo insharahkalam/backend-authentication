@@ -8,7 +8,7 @@ const createProduct = async (req, res) => {
         const { title, description, price, category, brand, stock, discount, featured } = req.body;
 
         // 1. Validate first
-        if (!title || !description || !price || !category || !brand || !stock || !discount || !req.file) {
+        if (!title || !description || !price || !category || !brand || !stock || !discount || !featured || !req.file) {
             return res.status(400).json({
                 message: "All fields are required!"
             });
