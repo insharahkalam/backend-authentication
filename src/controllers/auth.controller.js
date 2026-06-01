@@ -138,23 +138,24 @@ const loginUser = async (req, res) => {
         })
     }
 
-    const decoded = jwt.sign({ id: logUser.id, role: logUser.role }, process.env.JWT_SECRETS, function (err, token) {
-        res.cookie("token", token, {
-            httpOnly: true,
-            secure: true,
-            path: '/'
-        });
+    const token = jwt.sign({ id: logUser.id, role: logUser.role }, process.env.JWT_SECRETS)
 
-        console.log(err, "jwt function err");
-        console.log(token, "jwt function token");
+    console.log("jwt ka dedcoded mil rha hai check ====>", token);
 
-        res.json({
-            message: "User login successful",
-            token,
-            logUser
-        })
+    res.cookie("token", token, {
+        httpOnly: true,
+        secure: true,
+        path: '/'
+    });
+
+    
+    console.log(token, "jwt function token");
+
+    res.json({
+        message: "User login successful",
+        token,
+        logUser
     })
-    console.log("jwt ka dedcoded mil rha hai check ====>", decoded);
 
 
 }
