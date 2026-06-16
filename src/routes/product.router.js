@@ -11,7 +11,7 @@ const postRouter = express.Router()
 postRouter.post('/create', adminCheck, upload.single("image"), createProduct)
 postRouter.delete('/delete/:id', adminCheck, deleteProduct)
 postRouter.get('/getAllProduct', getAllProduct)
-postRouter.get('/getProduct/:id', userCheck, getProduct)
+postRouter.get('/getProduct/:id', getProduct)
 postRouter.put('/update/:id', adminCheck, upload.single("image"), updateProduct)
 
 export default postRouter
