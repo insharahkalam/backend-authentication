@@ -216,10 +216,7 @@ const forgotPass = async (req, res) => {
         }
     });
 
-    const CLIENT_URL = process.env.NODE_ENV === "production"
-        ? process.env.CLIENT_URL : "http://localhost:5173";
-
-    const resetLink = `${CLIENT_URL}/reset-password/${resetToken}`;
+   const resetLink = `${process.env.CLIENT_URL}/reset-password/${resetToken}`;
 
     await transporter.sendMail({
         from: process.env.EMAIL,
