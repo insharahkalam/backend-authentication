@@ -8,6 +8,7 @@ import ConnectDB from './db/db.js'
 import router from './routes/auth.routes.js'
 import cors from 'cors'
 import postRouter from './routes/product.router.js'
+import orderRouter from './routes/order.routes.js'
 dotenv.config()
 
 const app = express()
@@ -29,8 +30,8 @@ app.get('/', (req, res) => {
 })
 
 app.use('/api/auth', router)
-
 app.use('/api/products', postRouter)
+app.use("/api/orders", orderRouter);
 
 if (process.env.deployment == 'false') {
     app.listen(process.env.PORT, () => {
