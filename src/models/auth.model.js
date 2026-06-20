@@ -19,8 +19,17 @@ const authSchema = mongoose.Schema({
     role: {
         type: String,
         enum: ['admin', 'user'],
-        default: 'user'
+        default: 'user',
+    },
+    resetToken: {
+        type: String,
+        default: null
+    },
+    resetTokenExpire: {
+        type: Date,
+        default: null
     }
+
 })
 
 const userSchema = mongoose.model("users", authSchema)
