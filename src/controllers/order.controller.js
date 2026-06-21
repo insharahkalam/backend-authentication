@@ -188,4 +188,42 @@ const updateOrderStatus = async (req, res) => {
     }
 };
 
-export { createOrder, getMyOrders, getAllOrders, getOneOrder, updateOrderStatus };
+const cancelOrder = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const order = await orderSchema.findById(id);
+
+        if (!order) {
+            return res.status(404).json({ message: "Order not found!" });
+        }
+
+        // sirf apna order cancel kar sakta hai
+        if (order.user.toString() !== req.user.id) {
+            return res.status(403).json({ message: "Not authorized!" });
+        }
+
+        // sirf pending/processing wale orders cancel ho sakte hain
+        if (!["pending", "processing"].includes(order.status)) {
+            return res.status(400).json({ message: `Cannot cancel an order that is already ${order.status}` });
+        }
+
+        order.status = "cancelled";
+        await order.save();
+
+        // stock wapas badhao (optional but acha practice hai)
+        for (const item of order.products) {
+            await productSchema.findByIdAndUpdate(item.product, {
+                $inc: { stock: item.quantity }
+            });
+        }
+
+        res.json({ message: "Order cancelled successfully!", order });
+
+    } catch (error) {
+        console.log(error, "error cancelling order");
+        res.status(500).json({ message: "Failed to cancel order" });
+    }
+};
+
+export { createOrder, getMyOrders, getAllOrders, getOneOrder, updateOrderStatus, cancelOrder };
